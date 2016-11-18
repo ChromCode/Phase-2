@@ -16,6 +16,9 @@ bool Add::validator(){
    int num_params=0;
     
     //find result parameter in maps
+    string var_found = findVar(result_string);
+    //variable does not exist in maps
+    if(var_found=="none"){return false;}
 	
     //convert parameter list
     for(string s : params){
