@@ -15,24 +15,29 @@ bool Add::validator(){
     //parameter counter
    int num_params=0;
     
-    //find result parameter in maps
-    string var_found = findVar(result_string);
+    //find result parameter in maps: 0-not found, 1-nums, 2-reals
+    int var_found = findVar(result_string);
     //variable does not exist in maps
-    if(var_found=="none"){return false;}
+    if(var_found==0){return false;}
 	
     //convert parameter list
     for(string s : params){
-        try{
-	        if(convert(s)!=0){
+	    if(convert(s)!=0){
 	        num_params++;
 	        //if parameter is number, convert to float 
-	            if(convert(s)==2) { converted_params.push_back(stod(s)); }
-	            //if parameter is variable, pull value from variable map
-	            else if(convert(s)==1){converted_params.push_back(createdVariables[s]->getValue());}
-	        }
-            	else{cerr << "IN ADD: bad convert of " << s << endl; return false;}
-        } catch(...){return false;}
-            //check number of parameters doesn't exceed 12
+	        if(convert(s)==2) { converted_params.push_back(stod(s)); }
+	        //if parameter is variable, pull value from variable map
+	        else if(convert(s)==1){
+			int par_var_found = findVar(s);
+	        	switch(par_var_found){
+				case 1: converted_params.push_back(createdNUMERICS[s]->getValue());
+				case 2: converted_params.push_back(createdREALS[s]->getValue());
+				default: return false;
+			}
+		 }
+	     }
+             else{cerr << "IN ADD: bad convert of " << s << endl; return false;}
+             //check number of parameters doesn't exceed 12
     }
     if(num_params<2 || num_params>12){cerr << "IN ADD: wrong number of parameters" << endl; return false;}
     return true;
@@ -45,13 +50,13 @@ void Add::process(){
         float sum = 0;
         //add converted params to sum
         for(float f : converted_params){sum+=f;}
-            cout << "Variable before ADD: ";
-            createdVariables[result_string]->print();
-
         //set value of first variable to sum of all the rest
-            createdVariables[result_string]->setValue(sum);
-            cout << "Variable after ADD: ";
-            createdVariables[result_string]->print();
+	    int var_found = findVar(result_string);
+	    switch(par_var_found){
+				case 1: createdNUMERICS[result_string]->setValue(sum);
+				case 2: createdREALS[result_string]->setValue(sum);
+				default: return false;
+	    }
     } else {cerr << "IN ADD: invalid parameter list" << endl;}
 }
 
