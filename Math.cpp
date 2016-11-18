@@ -16,15 +16,13 @@ int Math::convert(string s){
 }
 
 string Math::findVar(string var){
-        //true if variable is found in maps, false otherwise
-        bool found = true;
         //string indicating which map var was found in
         string found_in="nums";
         //check that result variable exists in variable map
-        if(createdNUMERICS.find(result_string)==createdNUMERICS.end()){found==false; found_in="real";}
-        else if(createdREALS.find(result_string)==createdREALS.end()){found==false; found_in="none"}
-        //otherwise variable not found
-        if(found==false){cerr << "IN ADD: the variable " << result_string << " does not exist" << endl; found==true;}
+        if(createdNUMERICS.find(var)==createdNUMERICS.end()){
+                found_in="real";
+                if(createdREALS.find(var)==createdREALS.end()){found_in="none";}
+        }
         return found_in;
 }
 
