@@ -11,6 +11,7 @@ public:
         Math();
         ~Math();
         int convert(string s);
+        string findVar(string var);
         virtual bool validator();
         virtual void process();
 };
