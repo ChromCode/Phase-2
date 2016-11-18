@@ -17,6 +17,21 @@ T VAR<T>::getValue() {
 }
 
 template<typename T>
+bool VAR<T>::locked() {
+	return isLocked;
+}
+
+template<typename T>
+void VAR<T>::setLock() {
+	isLocked = true;
+}
+
+template<typename T>
+void VAR<T>::unLock() {
+	isLocked = false;
+}
+
+template<typename T>
 VAR<T>::~VAR(){}
 
 #endif

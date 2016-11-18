@@ -1,43 +1,42 @@
 #include "Var.h"
-#include "NUMERIC.h"
+#include "REAL.h"
 #include "common.h"
 
-NUMERIC::NUMERIC() {
+REAL::REAL() {
     name = "";
     value = 0;
 }
 
-NUMERIC::NUMERIC(const string& inName, const int& val) {
+REAL::REAL(const string& inName, const double& val) {
     name = inName;
     value = val;
 }
 
-void NUMERIC::setValue(int i) {
+void REAL::setValue(double i) {
     cout << "WE're gonna set this value" << endl;
-    
 }
 
-int NUMERIC::getValue() {
+double REAL::getValue() {
     return value;
 }
 
-string NUMERIC::getName() {
+string REAL::getName() {
     return name;
 }
 
-bool NUMERIC::locked() {
+bool REAL::locked() {
     return isLocked;
 }
 
-void NUMERIC::setLock() {
+void REAL::setLock() {
     isLocked = true;
 }
 
-void NUMERIC::unLock() {
+void REAL::unLock() {
     isLocked = false;
 }
 
-void NUMERIC::constructVar(stringstream &ss) {
+void REAL::constructVar(stringstream &ss) {
     string str = "";
     stringstream iss(ss.str()); // gets the first token before a comma
     iss >> ws;
@@ -50,17 +49,17 @@ void NUMERIC::constructVar(stringstream &ss) {
     iss >> ws; // ignore any whitespace
     getline(iss, str, ',');
     iss >> ws;
-    value = stoi(str.c_str());
+    value = stod(str.c_str());
 }
 
-NUMERIC * NUMERIC::clone(stringstream &ss) {
-    NUMERIC * cloneVar = new NUMERIC;
+REAL * REAL::clone(stringstream &ss) {
+    REAL * cloneVar = new REAL;
     cloneVar->constructVar(ss);
     return cloneVar;
 }
 
-void NUMERIC::print() {
+void REAL::print() {
     cout << name << ", " << value << endl;
 }
 
-NUMERIC::~NUMERIC(){}
+REAL::~REAL(){}

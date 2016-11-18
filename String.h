@@ -1,44 +1,55 @@
 #include "Var.h"
+#include "Var.cpp"
 #include "common.h"
 #ifndef STRING_H
 #define STRING_H
 
 // This class is derived from var, and its value is a char array, and has int size
-class STRING : public VAR {
+class STRING : public VAR<string> {
     private:
-        string name;
         int size;
-        string value;
     public:
 
         // default constructor
         STRING();
 
         // Paramaterized constructor initializing data members from param list
-        STRING(const string& inName, int inSize, string inValue);
-
-        // Inserts a VAR into a map for later use
-        void varInsert(map<string, VAR*> &varMap);
+        STRING(const string& inName, int inSize, const string& inValue);
 
         // Initializes data members with values from stringstream
         virtual void constructVar(stringstream &ss);
 
-        // Helpful debugging method, prints out VAR contents
+        // sets the value to the given param, if the types match
+        void setValue(string input);
+
+        // Helpful debugging funciton, prints VAR object
         void print();
 
-        // Clones the VAR object, used for multi-threading
-        VAR * clone(stringstream &ss);
+        // returns the value based off of its type, this code definitely could be more generic
+        string getValue();
 
-        // Assigns a pointer of type char to a String VAR
-        void assignString(string a);
+       // returns the name of the variable
+        string getName();
 
-        // gets the char value of a VAR at the provided index
-        char getStringValue(int i);
+        // returns the value of isLocked
+        bool locked();
 
-        // sets the value at the given index to the char value
-        void setStringValue(char a, int i);
+        // sets isLocked to True
+        void setLock();
 
-        // Default deconstructor
+        // set is Locked to False
+        void unLock();
+
+        // returns a char value at index i
+        char getChar(int x);
+
+        // sets a char value at index x
+        void setChar(int x, char a);
+
+        // Clones a VAR onject, used for multi threading
+        STRING * clone(stringstream &ss);
+
+        // Default constructor
         virtual ~STRING();
 };
 

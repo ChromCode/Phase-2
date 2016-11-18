@@ -1,9 +1,11 @@
 #include "common.h"
 #include "VAR.h"
-// #include "STRING.h"
+#include "String.h"
 #include "NUMERIC.h"
-// #include "templateVar.cpp"
-// #include "helperFunctions.h"
+#include "CHAR.h"
+#include "REAL.h"
+#include "helperFunctions.h"
+#include "variableHelpers.h"
 // #include "Label.h"
 // #include "jumproto.h"
 // #include "jump.h"
@@ -16,35 +18,28 @@
 // #include "Mult.h"
 // #include "Out.h"
 
-// map<string, > varMap = {
-// 	{ "NUMERIC",  },
-// 	{ "REAL",  },
-// 	{ "CHAR",  },
-// 	{ "STRING",  },
-// };
-// map<string, VAR<int>* > createdNUMERICS;
-// map<string, label*> createdLabels;
+typedef void(*ScriptFunction)(stringstream& ss);
+map<string, ScriptFunction> varMap = {
+	{ "NUMERIC", &numericHelper },
+	{ "REAL", &realHelper },
+	{ "CHAR", &charHelper },
+	{ "STRING", &stringHelper },
+};
 
 void varHelper(stringstream& ss) {
 	string str = "";
+    stringstream iss(str);
 	getline(ss, str, ',');
     cout << str << endl;
 	getline(ss >> ws, str, ',');
     cout << str << endl;
-	if( str == "NUMERIC") {
-        VAR<int>\ * obj = new NUMERIC;
-        ss >> ws;
-        obj -> constructVar(ss);
-        obj -> print();
-        delete(obj);
+    if( varMap.find(str) == varMap.end() ) {
+        cerr << "Input line is invalid: " << str << endl;
+        cerr << "No valid variable" << endl;
+        exit(1);
+    } else {
+        (*(varMap[str]))(ss);
     }
-    // if( obj != NULL ) {
-    //     ss >> ws;
-    //     VAR * objTemp = obj;
-    //     obj = obj -> clone(ss);
-    //     obj -> varInsert(createdVariables);
-    //     obj -> print();
-    // }
 }
 
 // void addHelper(stringstream& ss){
@@ -111,16 +106,15 @@ void varHelper(stringstream& ss) {
 // }
 
 // void assignHelper( stringstream &ss ) {
-//     cout << "Wasnt able to implement this" << endl;
+    
 // }
 
 // void setStrHelper( stringstream &ss ) {
 // 	string str = "";
 // 	getline(ss, str, ',');
-// 	VAR * obj = createdVariables[str];
+// 	STRING * obj = createdSTRINGS[str];
 // 	if( obj == NULL ) {
-// 		cout << "Variable " << str << " does not exit" << endl;
-// 		throw;
+// 		cerr << "Variable " << str << " does not exit" << endl;
 // 	} else {
 // 		int i;
 // 		char a;
@@ -129,37 +123,38 @@ void varHelper(stringstream& ss) {
 // 	    getline(ss >> ws, str, ',');
 // 	    stringstream iss(str);
 // 	    iss >> a;
-// 	    obj -> setStringValue(a, i);
-// 	    obj -> print();
+// 	    obj -> setChar(i, a);
+//         obj -> print();
 // 	}
 // }
 
-// void getStrHelper( stringstream &ss ) {
-//     string str = "";
-//     getline(ss, str, ',');
-//     VAR * obj = createdVariables[str];
-//     if( obj == NULL ) {
-//     	cout << "Variable " << str << " does not exist" << endl;
-//     	throw;
-//     }
-//     getline(ss, str, ',');
-// 	int x;
-//     char a;
-//     if( str.c_str()[0] == '$' ) {
-//     	x = obj -> getNumericValue();
-//     } else {
-//         x = stoi(str);
-//     }
-//     getline(ss, str, ',');
-//     VAR * newObj = createdVariables[str];
-//     if( newObj == NULL ) {
-//         cout << "Variable " << str << " does not exist" << endl;
-//     } else {
-//         a = obj -> getStringValue(x);
-//         newObj -> setStringValue(a, x);
-//         newObj -> print();
-//     }
-// }
+void getStrHelper( stringstream &ss ) {
+    string str = "";
+    getline(ss, str, ',');
+    STRING * obj = createdSTRINGS[str];
+    if( obj == NULL ) {
+    	cerr << "Variable " << str << " does not exist" << endl;
+    	throw;
+    }
+    getline(ss, str, ',');
+	int x;
+    char a;
+    if( str.c_str()[0] == '$' ) {
+    	NUMERIC * myINT = createdNUMERICS[str];
+        x = myINT -> getValue();
+    } else {
+        x = stoi(str);
+    }
+    getline(ss, str, ',');
+    CHAR * newObj = createdCHARS[str];
+    if( newObj == NULL ) {
+        cerr << "Variable " << str << " does not exist" << endl;
+    } else {
+        a = obj -> getChar(x);
+        newObj -> setValue(a);
+        newObj -> print();
+    }
+}
 
 // void labelHelper(stringstream&ss) {
 //     string str = "";
@@ -489,22 +484,36 @@ void varHelper(stringstream& ss) {
 
 // void doNothing( stringstream &ss ){}
 
-// void deleteVariables() {
-// 	for(map<string, VAR*>::iterator itr = createdVariables.begin(); itr != createdVariables.end(); itr++) {
-//         cout << "Deleting Var: " << itr -> first << endl;
-//         delete( itr -> second );
-//         itr -> second = NULL;
-//     }
-//     for(map<string, VAR*>::iterator itr = varMap.begin(); itr != varMap.end(); itr++) {
-//         delete(itr -> second);
-//         itr -> second = NULL;
-//     }
-//     for(map<string, label*>::iterator itr = createdLabels.begin(); itr != createdLabels.end(); itr++) {
-//         cout << itr -> first << " " << itr -> second -> name << " : " << itr -> second -> linenumber << endl;
-//         delete( itr -> second );
-//         itr -> second = NULL;
-//     }
-//     createdVariables.clear();
-//     createdLabels.clear();
-//     varMap.clear();
-// }
+void deleteVariables() {
+	for(map<string, NUMERIC*>::iterator itr = createdNUMERICS.begin(); itr != createdNUMERICS.end(); itr++) {
+        cout << "Deleting NUMERIC Var: " << itr -> first << endl;
+        delete( itr -> second );
+        itr -> second = NULL;
+    }
+    for(map<string, REAL*>::iterator itr = createdREALS.begin(); itr != createdREALS.end(); itr++) {
+        cout << "Deleting REAL Var: " << itr -> first << endl;
+        delete( itr -> second );
+        itr -> second = NULL;
+    }
+    for(map<string, CHAR*>::iterator itr = createdCHARS.begin(); itr != createdCHARS.end(); itr++) {
+        cout << "Deleting CHAR Var: " << itr -> first << endl;
+        delete( itr -> second );
+        itr -> second = NULL;
+    }
+    for(map<string, STRING*>::iterator itr = createdSTRINGS.begin(); itr != createdSTRINGS.end(); itr++) {
+        cout << "Deleting STRING Var: " << itr -> first << endl;
+        delete( itr -> second );
+        itr -> second = NULL;
+    }
+    for(map<string, ScriptFunction>::iterator itr = varMap.begin(); itr != varMap.end(); itr++) {
+        itr -> second = NULL;
+    }
+    // for(map<string, label*>::iterator itr = createdLabels.begin(); itr != createdLabels.end(); itr++) {
+    //     cout << itr -> first << " " << itr -> second -> name << " : " << itr -> second -> linenumber << endl;
+    //     delete( itr -> second );
+    //     itr -> second = NULL;
+    // }
+    // createdVariables.clear();
+    // createdLabels.clear();
+    varMap.clear();
+}

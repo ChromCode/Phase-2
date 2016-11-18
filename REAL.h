@@ -1,33 +1,34 @@
 #include "Var.h"
 #include "Var.cpp"
 #include "common.h"
-#ifndef NUMERIC_H
-#define NUMERIC_H
+#ifndef REAL_H
+#define REAL_H
 
 // This is a derived class from VAR
 // This is a template class because we wanted the value's type to vary
-class NUMERIC: public VAR<int> {
+class REAL: public VAR<double> {
     private:
     public:
 
     	// default Constructor
-        NUMERIC();
+        REAL();
 
         // parameterized constructor initializing objects based on the params
-        NUMERIC(const string& inName, const int& val);
+        REAL(const string& inName, const double& val);
 
         // initializes data members based off a stringstream
         virtual void constructVar(stringstream &ss);
 
         // sets the value to the given param, if the types match
-        void setValue(int input);
+        void setValue(double input);
 
         // Helpful debugging funciton, prints VAR object
         void print();
 
         // returns the value based off of its type, this code definitely could be more generic
-        int getValue();
+        double getValue();
 
+        // returns the name of the variable
         string getName();
 
         // returns the value of isLocked
@@ -40,10 +41,10 @@ class NUMERIC: public VAR<int> {
         void unLock();
 
         // Clones a VAR onject, used for multi threading
-        NUMERIC * clone(stringstream &ss);
+        REAL * clone(stringstream &ss);
 
         // Default constructor
-        virtual ~NUMERIC();
+        virtual ~REAL();
 };
 
 #endif

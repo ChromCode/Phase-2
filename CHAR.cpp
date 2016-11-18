@@ -1,43 +1,42 @@
 #include "Var.h"
-#include "NUMERIC.h"
+#include "CHAR.h"
 #include "common.h"
 
-NUMERIC::NUMERIC() {
+CHAR::CHAR() {
     name = "";
     value = 0;
 }
 
-NUMERIC::NUMERIC(const string& inName, const int& val) {
+CHAR::CHAR(const string& inName, const char& val) {
     name = inName;
     value = val;
 }
 
-void NUMERIC::setValue(int i) {
-    cout << "WE're gonna set this value" << endl;
-    
+void CHAR::setValue(char i) {
+    value = i;
 }
 
-int NUMERIC::getValue() {
+char CHAR::getValue() {
     return value;
 }
 
-string NUMERIC::getName() {
+string CHAR::getName() {
     return name;
 }
 
-bool NUMERIC::locked() {
+bool CHAR::locked() {
     return isLocked;
 }
 
-void NUMERIC::setLock() {
+void CHAR::setLock() {
     isLocked = true;
 }
 
-void NUMERIC::unLock() {
+void CHAR::unLock() {
     isLocked = false;
 }
 
-void NUMERIC::constructVar(stringstream &ss) {
+void CHAR::constructVar(stringstream &ss) {
     string str = "";
     stringstream iss(ss.str()); // gets the first token before a comma
     iss >> ws;
@@ -50,17 +49,23 @@ void NUMERIC::constructVar(stringstream &ss) {
     iss >> ws; // ignore any whitespace
     getline(iss, str, ',');
     iss >> ws;
-    value = stoi(str.c_str());
+    stringstream pss(str);
+    pss >> value;
+    if( ss.fail() ) {
+        cerr << "Unable to set char value to the speicified type" << endl;
+        ss.clear();
+        exit(1);
+    }
 }
 
-NUMERIC * NUMERIC::clone(stringstream &ss) {
-    NUMERIC * cloneVar = new NUMERIC;
+CHAR * CHAR::clone(stringstream &ss) {
+    CHAR * cloneVar = new CHAR;
     cloneVar->constructVar(ss);
     return cloneVar;
 }
 
-void NUMERIC::print() {
+void CHAR::print() {
     cout << name << ", " << value << endl;
 }
 
-NUMERIC::~NUMERIC(){}
+CHAR::~CHAR(){}
