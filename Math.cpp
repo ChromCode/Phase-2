@@ -15,13 +15,13 @@ int Math::convert(string s){
         else {return 0;}
 }
 
-string Math::findVar(string var){
+int Math::findVar(string var){
         //string indicating which map var was found in
-        string found_in="nums";
+        string found_in=1;
         //check that result variable exists in variable map
         if(createdNUMERICS.find(var)==createdNUMERICS.end()){
-                found_in="real";
-                if(createdREALS.find(var)==createdREALS.end()){found_in="none";}
+                found_in=2;
+                if(createdREALS.find(var)==createdREALS.end()){found_in=0;}
         }
         return found_in;
 }
