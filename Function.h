@@ -1,6 +1,3 @@
-#include "templateVar.cpp"
-#include "templateVar.h"
-#include "Var.h"
 #include "helperFunctions.h"
 
 #ifndef FUNCTION_H

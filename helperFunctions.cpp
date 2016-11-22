@@ -6,17 +6,17 @@
 #include "REAL.h"
 #include "helperFunctions.h"
 #include "variableHelpers.h"
-// #include "Label.h"
+#include "Label.h"
 // #include "jumproto.h"
 // #include "jump.h"
 // #include "jumpz.h"
 // #include "jumpgt.h"
 // #include "Function.h"
-// #include "Add.h"
-// #include "Sub.h"
-// #include "Div.h"
-// #include "Mult.h"
-// #include "Out.h"
+#include "Add.h"
+#include "Sub.h"
+#include "Div.h"
+#include "Mult.h"
+#include "Out.h"
 
 typedef void(*ScriptFunction)(stringstream& ss);
 map<string, ScriptFunction> varMap = {
@@ -25,6 +25,8 @@ map<string, ScriptFunction> varMap = {
 	{ "CHAR", &charHelper },
 	{ "STRING", &stringHelper },
 };
+
+map<string, label*> createdLabels;
 
 void varHelper(stringstream& ss) {
 	string str = "";
@@ -42,91 +44,91 @@ void varHelper(stringstream& ss) {
     }
 }
 
-// void addHelper(stringstream& ss){
-//     stringstream iss(ss.str());
-//     vector<string> input;
-//     string in;
-//     iss >> ws;
-//     getline(iss, in, ' ');
-//     iss >> ws;
-//     while(getline(iss, in, ',')) {iss>>ws; input.push_back(in);}
-//     Add* add = new Add(input);
-//     add->process();
-//     delete(add);
-// }
-// void multHelper(stringstream& ss_in){
-//     stringstream ss(ss_in.str());
-//     vector<string> input;
-//     string in;
-//     ss >> ws;
-//     getline(ss, in, ' ');
-//     ss >> ws;
-//     while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
-//     Mult* mult = new Mult(input);
-//     mult->process();
-//     delete(mult);
-// }
+void addHelper(stringstream& ss){
+    stringstream iss(ss.str());
+    vector<string> input;
+    string in;
+    iss >> ws;
+    getline(iss, in, ' ');
+    iss >> ws;
+    while(getline(iss, in, ',')) {iss>>ws; input.push_back(in);}
+    Add* add = new Add(input);
+    add->process();
+    delete(add);
+}
+void multHelper(stringstream& ss_in){
+    stringstream ss(ss_in.str());
+    vector<string> input;
+    string in;
+    ss >> ws;
+    getline(ss, in, ' ');
+    ss >> ws;
+    while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
+    Mult* mult = new Mult(input);
+    mult->process();
+    delete(mult);
+}
 
-// void subHelper(stringstream& ss_in){
-//     stringstream ss(ss_in.str());
-//     vector<string> input;
-//     string in;
-//     ss >> ws;
-//     getline(ss, in, ' ');
-//     ss >> ws;
-//     while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
-//     Sub* sub = new Sub(input);
-//     sub->process();
-//     delete(sub);
-// }
+void subHelper(stringstream& ss_in){
+    stringstream ss(ss_in.str());
+    vector<string> input;
+    string in;
+    ss >> ws;
+    getline(ss, in, ' ');
+    ss >> ws;
+    while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
+    Sub* sub = new Sub(input);
+    sub->process();
+    delete(sub);
+}
 
-// void divHelper(stringstream& ss_in){
-//     stringstream ss(ss_in.str());
-//     vector<string> input;
-//     string in;
-//     ss >> ws;
-//     getline(ss, in, ' ');
-//     ss >> ws;
-//     while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
-//     Div* div = new Div(input);
-//     div->process();
-//     delete(div);
-// }
-// void outHelper(stringstream& ss_in){
-//     stringstream ss(ss_in.str());
-//     vector<string> input;
-//     string in;
-//     ss >> ws;
-//     getline(ss, in, ' ');
-//     ss >> ws;
-//     while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
-//     Out* out = new Out(input);
-//     out->process();
-//     delete(out);
-// }
+void divHelper(stringstream& ss_in){
+    stringstream ss(ss_in.str());
+    vector<string> input;
+    string in;
+    ss >> ws;
+    getline(ss, in, ' ');
+    ss >> ws;
+    while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
+    Div* div = new Div(input);
+    div->process();
+    delete(div);
+}
+void outHelper(stringstream& ss_in){
+    stringstream ss(ss_in.str());
+    vector<string> input;
+    string in;
+    ss >> ws;
+    getline(ss, in, ' ');
+    ss >> ws;
+    while(getline(ss, in, ',')){ss >> ws; input.push_back(in);}
+    Out* out = new Out(input);
+    out->process();
+    delete(out);
+}
 
 // void assignHelper( stringstream &ss ) {
     
 // }
 
-// void setStrHelper( stringstream &ss ) {
-// 	string str = "";
-// 	getline(ss, str, ',');
-// 	STRING * obj = createdSTRINGS[str];
-// 	if( obj == NULL ) {
-// 		cerr << "Variable " << str << " does not exit" << endl;
-// 	} else {
-// 		int i;
-// 		char a;
-//         getline(ss >> ws, str, ',');
-// 	    i = stoi(str.c_str());
-// 	    getline(ss >> ws, str, ',');
-// 	    stringstream iss(str);
-// 	    iss >> a;
-// 	    obj -> setChar(i, a);
-//         obj -> print();
-// 	}
-// }
+void setStrHelper( stringstream &ss ) {
+	string str = "";
+	getline(ss, str, ',');
+	STRING * obj = createdSTRINGS[str];
+	if( obj == NULL ) {
+		cerr << "Variable " << str << " does not exit" << endl;
+	} else {
+		int i;
+		char a;
+        getline(ss >> ws, str, ',');
+	    i = stoi(str.c_str());
+	    getline(ss >> ws, str, ',');
+	    stringstream iss(str);
+	    iss >> a;
+	    obj -> setChar(i, a);
+        obj -> print();
+	}
+}
 
 void getStrHelper( stringstream &ss ) {
     string str = "";
@@ -156,15 +158,15 @@ void getStrHelper( stringstream &ss ) {
     }
 }
 
-// void labelHelper(stringstream&ss) {
-//     string str = "";
-//     getline(ss, str, ' ');
-//     label * A = new label();
-//     if (A != NULL) {
-//         A->initialize(ss, counter);
-//         createdLabels.insert(pair<string,label*> (str, A));
-//     }
-// }
+void labelHelper(stringstream&ss) {
+    string str = "";
+    getline(ss, str, ' ');
+    label * A = new label();
+    if (A != NULL) {
+        A->initialize(ss, counter);
+        createdLabels.insert(pair<string,label*> (str, A));
+    }
+}
 
 // void JMPHelper(stringstream&ss) {
 //     string str = "";
@@ -449,40 +451,40 @@ void getStrHelper( stringstream &ss ) {
 //     delete(A);
 // }
 
-// void sleepHelper(stringstream &ss) {
-// 	string str = "";
-// 	getline(ss, str, ' ');
-// 	getline(ss, str, ',');
-// 	long long x;
-// 	if( str.c_str()[0] == '$' ) {
-// 		VAR * obj = createdVariables[str.c_str()];
-// 		if( obj == NULL ) {
-// 			cout << "The variable: " << str.c_str() << " does not exist" << endl;
-// 			throw;
-// 		} else {
-// 			x = obj -> getNumericValue();
-//     	    cout << "Waiting " << x << " seconds" << endl;
-// 			std::chrono::seconds dura( x);
-//     	    std::this_thread::sleep_for( dura );
-//     	    cout << "Done!" << endl;
-// 		}
-// 	} else {
-// 		stringstream iss(str.c_str());
-// 		iss >> x;
-// 	    if( iss.fail() ) {
-//             cout << "Parameter does not match required type REAL or NUMERIC" << endl;
-//             iss.clear();
-//             throw;
-//         } else {
-//     	    cout << "Waiting " << x << " seconds" << endl;
-//     	    std::chrono::seconds dura(x);
-//     	    std::this_thread::sleep_for( dura );
-//     	    cout << "Done!" << endl;
-//         }
-// 	}
-// }
+void sleepHelper(stringstream &ss) {
+	string str = "";
+	getline(ss, str, ' ');
+	getline(ss, str, ',');
+	long long x;
+	if( str.c_str()[0] == '$' ) {
+		NUMERIC * obj = createdNUMERICS[str.c_str()];
+		if( obj == NULL ) {
+			cout << "The variable: " << str.c_str() << " does not exist" << endl;
+			throw;
+		} else {
+			x = obj -> getValue();
+    	    cout << "Waiting " << x << " seconds" << endl;
+			std::chrono::seconds dura( x);
+    	    std::this_thread::sleep_for( dura );
+    	    cout << "Done!" << endl;
+		}
+	} else {
+		stringstream iss(str.c_str());
+		iss >> x;
+	    if( iss.fail() ) {
+            cout << "Parameter does not match required type REAL or NUMERIC" << endl;
+            iss.clear();
+            throw;
+        } else {
+    	    cout << "Waiting " << x << " seconds" << endl;
+    	    std::chrono::seconds dura(x);
+    	    std::this_thread::sleep_for( dura );
+    	    cout << "Done!" << endl;
+        }
+	}
+}
 
-// void doNothing( stringstream &ss ){}
+void doNothing( stringstream &ss ){}
 
 void deleteVariables() {
 	for(map<string, NUMERIC*>::iterator itr = createdNUMERICS.begin(); itr != createdNUMERICS.end(); itr++) {
@@ -508,12 +510,12 @@ void deleteVariables() {
     for(map<string, ScriptFunction>::iterator itr = varMap.begin(); itr != varMap.end(); itr++) {
         itr -> second = NULL;
     }
-    // for(map<string, label*>::iterator itr = createdLabels.begin(); itr != createdLabels.end(); itr++) {
-    //     cout << itr -> first << " " << itr -> second -> name << " : " << itr -> second -> linenumber << endl;
-    //     delete( itr -> second );
-    //     itr -> second = NULL;
-    // }
+    for(map<string, label*>::iterator itr = createdLabels.begin(); itr != createdLabels.end(); itr++) {
+        cout << itr -> first << " " << itr -> second -> name << " : " << itr -> second -> linenumber << endl;
+        delete( itr -> second );
+        itr -> second = NULL;
+    }
     // createdVariables.clear();
-    // createdLabels.clear();
+    createdLabels.clear();
     varMap.clear();
 }

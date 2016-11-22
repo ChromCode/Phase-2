@@ -1,10 +1,6 @@
 #include "common.h"
-#include "Var.h"
-// #include "String.h"
-#include "NUMERIC.h"
-// #include "templateVar.cpp"
 #include "helperFunctions.h"
-// #include "Label.h"
+#include "Label.h"
 
 typedef void(*ScriptFunction)(stringstream& ss);
 map<string, ScriptFunction> functionPointers;
@@ -13,15 +9,15 @@ int counter;
 
 int main() {
     functionPointers["VAR"] = &varHelper;
-    // functionPointers["ADD"] = &addHelper;
-    // functionPointers["SUB"] = &subHelper;
-    // functionPointers["MUL"] = &multHelper;
-    // functionPointers["DIV"] = &divHelper;
+    functionPointers["ADD"] = &addHelper;
+    functionPointers["SUB"] = &subHelper;
+    functionPointers["MUL"] = &multHelper;
+    functionPointers["DIV"] = &divHelper;
     // functionPointers["ASSIGN"] = &assignHelper;
-    // functionPointers["OUT"] = &outHelper;
-    // functionPointers["SET_STR_CHAR"] = &setStrHelper;
-    // functionPointers["GET_STR_CHAR"] = &getStrHelper;
-    // functionPointers["LABEL"] = &labelHelper;
+    functionPointers["OUT"] = &outHelper;
+    functionPointers["SET_STR_CHAR"] = &setStrHelper;
+    functionPointers["GET_STR_CHAR"] = &getStrHelper;
+    functionPointers["LABEL"] = &labelHelper;
     // functionPointers["JMP"] = &JMPHelper;
     // functionPointers["JMPZ"] = &JMPZHelper;
     // functionPointers["JMPNZ"] = &JMPNZHelper;
@@ -29,7 +25,7 @@ int main() {
     // functionPointers["JMPGTE"] = &JMPGTEHelper;
     // functionPointers["JMPLT"] &JMPLTHelper
     // functionPointers["JMPLTE"] &JMPLTEHelper
-    // functionPointers["SLEEP"] = &sleepHelper;
+    functionPointers["SLEEP"] = &sleepHelper;
 
     string line ="";
     ifstream readFile("Program.mis");
@@ -50,17 +46,17 @@ int main() {
 
     // We now create labels
     counter = 0;
-    // while( counter <= lines.size()-1 ) {
-    //     string fileLine = lines[counter];
-    //     stringstream iss(fileLine);
-    //     getline(iss, name, ' ');
-    //     if ( name == "LABEL" ) {
-    //         (*(functionPointers["LABEL"]))(iss);
-    //     }
-    //     counter++;
-    // }
-    // counter = 0;
-    // functionPointers["LABEL"] = &doNothing;
+    while( counter <= lines.size()-1 ) {
+        string fileLine = lines[counter];
+        stringstream iss(fileLine);
+        getline(iss, name, ' ');
+        if ( name == "LABEL" ) {
+            (*(functionPointers["LABEL"]))(iss);
+        }
+        counter++;
+    }
+    counter = 0;
+    functionPointers["LABEL"] = &doNothing;
 
     // Loop throught the line map and parse our OP code
     // Then we send it off to a helper function
@@ -76,7 +72,7 @@ int main() {
             (*(functionPointers[name]))(iss);
         }
     }
-    // deleteVariables();
+    deleteVariables();
     functionPointers.clear();
     lines.clear();
     readFile.close();

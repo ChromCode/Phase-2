@@ -1,0 +1,3 @@
+VAR $myString,STRING,100,Can this world get any more cruel?
+VAR $myChar,CHAR,b
+GET_STR_CHAR $myString,1,$myChar

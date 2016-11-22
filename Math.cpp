@@ -17,7 +17,7 @@ int Math::convert(string s){
 
 int Math::findVar(string var){
         //string indicating which map var was found in
-        string found_in=1;
+        int found_in=1;
         //check that result variable exists in variable map
         if(createdNUMERICS.find(var)==createdNUMERICS.end()){
                 found_in=2;
