@@ -11,19 +11,28 @@ bool Mult::validator(){
         //cout << "running MULT validator..." << endl; 
         //parameter counter 
         int num_params=0;
-        //check that result is a variable that exists in the var map 
-        if(createdVariables.find(result_string)==createdVariables.end()){cerr << "IN MUL: the variable " << result_string << " does not exist" << endl; return false;}
-        //convert parameter list 
+        //find result parameter in maps: 0-not found, 1-nums, 2-reals
+        int var_found = findVar(result_string);
+         //variable does not exist in maps
+         if(var_found==0){return false;}
+	
+        //convert parameter list
         for(string s : params){
-                        //if conversion was passed
-                if(convert(s)!=0){
-                        num_params++;
-                        //numeric value parameter
-                        if(convert(s)==2){converted_params.push_back(stod(s));}
-                        //variable parameter
-                        else if(convert(s)==1){converted_params.push_back(createdVariables[s]->getNumericValue());}
-                }
-                else{cerr << "IN MUL: bad convert of " << s << endl; return false;}
+	        if(convert(s)!=0){
+	                num_params++;
+	                //if parameter is number, convert to float 
+	                if(convert(s)==2) { converted_params.push_back(stod(s)); }
+	                //if parameter is variable, pull value from variable map
+	                else if(convert(s)==1){
+			        int par_var_found = findVar(s);
+	        	        switch(par_var_found){
+				        case 1: converted_params.push_back(createdNUMERICS[s]->getValue());
+				        case 2: converted_params.push_back(createdREALS[s]->getValue());
+				        default: return false;
+			        }
+		        }
+	        }
+                else{cerr << "IN ADD: bad convert of " << s << endl; return false;}
         }
         if(num_params<2 || num_params>12){cerr << "IN MUL: wrong number of parameters" << endl; return false;}
         return true;
@@ -36,13 +45,12 @@ void Mult::process(){
                 float prod  = 1;
                 //multiply converted parameters together 
                 for(float f : converted_params){prod*=f;}
-                cout << "Variable before MUL: ";
-                createdVariables[result_string]->print();
-
-                //set value of first variable to the product
-                createdVariables[result_string]->setNumValue(prod);
-                cout << "Variable after MUL: ";
-                createdVariables[result_string]->print();
+                int var_found = findVar(result_string);
+	        switch(var_found){
+			case 1: createdNUMERICS[result_string]->setValue(sum);
+			case 2: createdREALS[result_string]->setValue(sum);
+			default: return false;
+	        }
         }
         else{cout << "IN MUL: invalid parameter list" << endl;}
 
