@@ -52,7 +52,7 @@ void Add::process(){
         for(float f : converted_params){sum+=f;}
         //set value of first variable to sum of all the rest
 	    int var_found = findVar(result_string);
-	    switch(par_var_found){
+	    switch(var_found){
 				case 1: createdNUMERICS[result_string]->setValue(sum);
 				case 2: createdREALS[result_string]->setValue(sum);
 				default: return false;
