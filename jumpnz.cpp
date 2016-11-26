@@ -3,15 +3,15 @@
 #include "jumproto.h"
 #include "helperFunctions.h"
 
-jumpz::jumpz() {}
-jumpz::~jumpz() {}
+jumpz::jumpnz() {}
+jumpz::~jumpnz() {}
 
-void jumpz::clone(stringstream&ss, int x) {
-	jumpz *ok = new jumpz();
+void jumpnz::clone(stringstream&ss, int x) {
+	jumpnz *ok = new jumpnz();
 	ok->initialize(ss, x);
 }
 
-void jumpz::initialize(stringstream &ss, int x) {
+void jumpnz::initialize(stringstream &ss, int x) {
 	cout << ss.str() << endl;
 	linenumber = x;
 	string str = ss.str();
@@ -23,7 +23,7 @@ void jumpz::initialize(stringstream &ss, int x) {
 	acjump(str);
 }
 
-void jumpz::acjump(string str) {
+void jumpnz::acjump(string str) {
 	getline(iss, str, ',');
 	getline(iss, str, ',');
 	label * foundLabel = createdLabels[labelname];
@@ -40,7 +40,7 @@ void jumpz::acjump(string str) {
 		}
 		else {
 			int i = obj->VALUE;
-			if (i == 0) {
+			if (i != 0) {
 				counter = foundLabel->linenumber;
 			}
 		}
@@ -48,7 +48,7 @@ void jumpz::acjump(string str) {
 	else {
 		cout << str << endl;
 		int i = stoi(str);
-		if (i == 0) {
+		if (i != 0) {
 			counter = foundLabel->linenumber;
 		}
 	}

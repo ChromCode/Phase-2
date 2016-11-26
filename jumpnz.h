@@ -1,14 +1,14 @@
 #include "common.h"
 #include "jumproto.h"
-#ifndef JUMPZ_H
-#define JUMPZ_H
+#ifndef JUMPNZ_H
+#define JUMPNZ_H
 
-class jumpz : public jumproto {
+class jumpnz : public jumproto {
 public:
 	void clone(stringstream&ss, int x);
-	jumpz();
+	jumpnz();
 	string labelname;
-	virtual ~jumpz();
+	virtual ~jumpnz();
 	virtual void initialize(stringstream &ss, int x);
 	int linenumber;
 	void acjump(string str);
