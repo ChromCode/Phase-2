@@ -34,7 +34,7 @@ void labelHelper( stringstream &ss );
 // void JMPLTEHelper( stringstream &ss );
 void sleepHelper( stringstream &ss );
 void threadParseHelper( stringstream &ss );
-void threadExecuteHelper( stringstream &ss );
+void threadExecuteHelper(int start, int end);
 void barrierHelper( stringstream &ss );
 void doNothing( stringstream &ss );
 void deleteVariables();
