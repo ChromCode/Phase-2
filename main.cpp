@@ -72,6 +72,10 @@ int main() {
             cerr << "Input line is invalid: " << name << endl;
             cerr << "No valid OPCODE" << endl;
             exit(1);
+        } else if (name=="THREAD_BEGIN"){
+            int thread_end = threadPairs[counter];
+            threadExecuteHelper(counter, thread_end);
+            counter = thread_end+1;
         } else {
             (*(functionPointers[name]))(iss);
         }
