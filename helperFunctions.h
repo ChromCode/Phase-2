@@ -33,6 +33,8 @@ void labelHelper( stringstream &ss );
 // void JMPLTHelper( stringstream &ss );
 // void JMPLTEHelper( stringstream &ss );
 void sleepHelper( stringstream &ss );
+void aquireLock(VAR* var);
+void releaseLock(VAR* var);
 void threadParseHelper( stringstream &ss );
 void threadExecuteHelper(int start, int end);
 void barrierHelper( stringstream &ss );
