@@ -18,5 +18,6 @@
 #include <thread>
 using namespace std;
 extern int counter;
-
+typedef void(*ScriptFunction)(stringstream& ss);
+extern map<string, ScriptFunction> functionPointers;
 #endif

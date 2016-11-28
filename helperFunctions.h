@@ -12,7 +12,10 @@ extern map< string, CHAR*> createdCHARS;
 extern map< string, STRING*> createdSTRINGS;
 extern map<string, label*> createdLabels;
 extern std::vector<std::thread> threadVector; 
+extern map<int, int> threadPairs;
 extern map<int, string> lines;
+typedef void(*ScriptFunction)(stringstream& ss);
+extern map<string, ScriptFunction> functionPointers;
 
 void varHelper( stringstream &ss );
 void realHelper( stringstream &ss );
