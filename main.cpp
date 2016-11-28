@@ -74,7 +74,7 @@ int main() {
             exit(1);
         } else if (name=="THREAD_BEGIN"){
             int thread_end = threadPairs[counter];
-            threadExecuteHelper(counter, thread_end);
+            thread t1(threadExecutreHelper, counter);
             counter = thread_end+1;
         } else {
             (*(functionPointers[name]))(iss);
