@@ -582,6 +582,16 @@ void threadParseHelper( stringstream &ss ){
     }
 }
 
+void aquireLock(var){
+	while(var.isLocked()){
+		//wait
+	}
+	var.setLock();
+}
+void releaseLock(var){
+	var.unLock();
+}
+
 void threadExecuteHelper( start, end){
     cout << "We are now executing a thread" << endl;
     int intern_counter = start;
