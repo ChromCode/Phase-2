@@ -13,21 +13,21 @@ map< string, CHAR* > createdCHARS;
 map< string, STRING* > createdSTRINGS;
 
 void numericHelper( stringstream &ss ) {
-    // VAR<int> * obj = new NUMERIC();
-    // ss >> ws;
-    // VAR<int> * objTemp = obj;
-    // obj = objTemp -> clone(ss);
-    // delete(objTemp);
-    // createdNUMERICS[obj->getName()] = obj;
+    NUMERIC * obj = new NUMERIC();
+    ss >> ws;
+    NUMERIC * objTemp = obj;
+    obj = objTemp -> clone(ss);
+    delete(objTemp);
+    createdNUMERICS[obj->getName()] = obj;
 }
 
 void realHelper( stringstream &ss ) {
-	// VAR<double> * obj = new REAL();
- //    ss >> ws;
- //    VAR<double> * objTemp = obj;
- //    obj = objTemp -> clone(ss);
- //    delete(objTemp);
- //    createdREALS[obj->getName()] = obj;
+	REAL * obj = new REAL();
+    ss >> ws;
+    REAL * objTemp = obj;
+    obj = objTemp -> clone(ss);
+    delete(objTemp);
+    createdREALS[obj->getName()] = obj;
 }
 
 void charHelper( stringstream &ss ) {

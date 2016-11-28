@@ -11,7 +11,6 @@ public:
 	virtual ~jumpz();
 	virtual void initialize(stringstream &ss, int x);
 	int linenumber;
-	void acjump(string str);
 };
 
 #endif

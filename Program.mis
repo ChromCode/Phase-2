@@ -1,3 +1,4 @@
-VAR $myString,STRING,100,Can this world get any more cruel?
-VAR $myChar,CHAR,b
-GET_STR_CHAR $myString,1,$myChar
+VAR $myInt,NUMERIC,12
+VAR $myDouble,REAL,12.3
+VAR $newInt,NUMERIC,52
+ASSIGN $myInt, $newInt

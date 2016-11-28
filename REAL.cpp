@@ -13,7 +13,7 @@ REAL::REAL(const string& inName, const double& val) {
 }
 
 void REAL::setValue(double i) {
-    cout << "WE're gonna set this value" << endl;
+    value = i;
 }
 
 double REAL::getValue() {

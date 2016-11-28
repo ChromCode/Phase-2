@@ -27,6 +27,7 @@ map<string, ScriptFunction> varMap = {
 };
 
 map<string, label*> createdLabels;
+std::vector<std::thread> threadVector;
 
 void varHelper(stringstream& ss) {
 	string str = "";
@@ -107,9 +108,85 @@ void outHelper(stringstream& ss_in){
     delete(out);
 }
 
-// void assignHelper( stringstream &ss ) {
-    
-// }
+void assignHelper( stringstream &ss ) {
+    string str = "";
+    string value = "";
+    getline(ss>>ws, str, ',');
+    getline(ss>>ws, value, ',');
+    if( str[0] != '$' ) {
+        cerr << "Must be a valid variable" << endl;
+    }
+
+    // this process looks for the correct variable, and assigns the wanted value
+    while(true) {
+
+        if( createdNUMERICS.find(str) != createdNUMERICS.end() ) {
+            NUMERIC * obj = createdNUMERICS[str];
+            int x;
+            // if the wanted value is a variable
+            if( value[0] == '$' ) {
+                if( createdNUMERICS.find(value) != createdNUMERICS.end() ) {
+                    NUMERIC * toAssign = createdNUMERICS[value];
+                    // assign the variables value to the original variable
+                    x = toAssign -> getValue(); 
+                }
+            } else {
+                x = stoi(value);
+            }
+            // This should throw an error if the types do not match
+            obj -> setValue(x);
+            cout << "Variable " << str << " is now equal to " << x << endl;
+            break;
+
+        // repeat the process for all other cases
+        } else if( createdREALS.find(str) != createdREALS.end() ) {
+            double x;
+            REAL * obj = createdREALS[str];
+            if( value[0] == '$' ) {
+                if( createdREALS.find(value) != createdREALS.end() ) {
+                    REAL * toAssign = createdREALS[value];
+                    x = toAssign -> getValue();
+                }
+            } else {
+                x = stod(value);
+            }
+            obj -> setValue(x);
+            cout << "Variable " << str << " is now equal to " << x << endl;
+            break;
+
+        } else if( createdCHARS.find(str) != createdCHARS.end() ) {
+            CHAR * obj = createdCHARS[str];
+            char x;
+            if( value[0] == '$' ) {
+                if( createdCHARS.find(value) != createdCHARS.end() ) {
+                    CHAR * toAssign = createdCHARS[value];
+                    x = toAssign -> getValue();
+                }
+            } else {
+                x = value[0];
+            }
+            obj -> setValue(x);
+            cout << "Variable " << str << " is now equal to " << x << endl;
+            break;
+
+        } else if( createdSTRINGS.find(str) != createdSTRINGS.end() ) {
+            STRING * obj = createdSTRINGS[str];
+            if( value[0] == '$' ) {
+                if( createdSTRINGS.find(value) != createdSTRINGS.end() ) {
+                    STRING * toAssign = createdSTRINGS[value];
+                    value = toAssign -> getValue();
+                }
+            } // else set it to the string
+            obj -> setValue(value);
+            cout << "Variable " << str << " is now equal to " << value << endl;
+            break;
+
+        } else {
+            cerr << "Variable does not exist" << endl;
+            break;
+        }
+    }
+}
 
 void setStrHelper( stringstream &ss ) {
 	string str = "";
@@ -167,69 +244,289 @@ void labelHelper(stringstream&ss) {
         createdLabels.insert(pair<string,label*> (str, A));
     }
 }
-void JMPHelper(stringstream&ss) {
-	string str = "";
-	getline(ss, str, ' ');
-	jump* A = new jump();
-	if (A != NULL) {
-		A->initialize(ss, counter);
-	}
-	delete(A);
-}
 
-void  JMPZHelper(stringstream&ss) {
-	string str = "";
-	stringstream iss(ss.str());
-	getline(ss, str, ' ');
-	jumpz* A = new jumpz();
-	A->initialize(iss, counter);
-	delete(A);
-}
+// void JMPHelper(stringstream&ss) {
+//     string str = "";
+//     getline(ss, str, ' ');
+//     jump* A = new jump();
+//     if (A != NULL) {
+//         A -> initialize(ss, counter);
+//         map<string, label*>::iterator p;
+//         p = createdLabels.find(str);
+//         if (p != createdLabels.end()) {
+//             counter = p->second->linenumber;
+//             cout << "Jumping to label " << A->labelname << endl;
+//         } else {
+//             cerr << "label not found\n";
+//             delete(A);
+//             exit(1);
+//         }
+//         delete(A);
+//     }
+// }
 
-void  JMPNZHelper(stringstream&ss) {
-	string str = "";
-	stringstream iss(ss.str());
-	getline(ss, str, ' ');
-	jumpnz* A = new jumpnz();
-	A->initialize(iss, counter);
-	delete(A);
-}
+// void  JMPZHelper(stringstream&ss) {
+//     string str = "";
+//     stringstream iss(ss.str());
+//     getline(ss, str, ' ');
+//     jumpz* A = new jumpz();
+//     A->initialize(iss, counter);
+//     getline(iss, str, ',');
+//     getline(iss, str, ',');
+//     label * foundLabel = createdLabels[A->labelname];
+//     if( foundLabel == NULL ) {
+//         cerr << "No label Found" << endl;
+//         exit(1);
+//     }
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             int i = obj -> getNumericValue();
+//             if( i == 0 ) {
+//                 counter = foundLabel -> linenumber;
+//             }
+//         }
+//     } else {
+//         cout << str << endl;
+//         int i = stoi(str);
+//         if( i == 0 ) {
+//             counter = foundLabel -> linenumber;
+//         }
+//     } 
+//     delete(A);
+// }
 
-void JMPGTHelper(stringstream&ss) {
-	string str = "";
-	stringstream iss(ss.str());
-	getline(ss, str, ' ');
-	jumpgt* A = new jumpgt();
-	A->initialize(iss, counter);
-	delete(A);
-}
+// void  JMPNZHelper(stringstream&ss) {
+//     string str = "";
+//     stringstream iss(ss.str());
+//     getline(ss, str, ' ');
+//     jumpz* A = new jumpz();
+//     A->initialize(iss, counter);
+//     getline(iss, str, ',');
+//     getline(iss, str, ',');
+//     label * foundLabel = createdLabels[A->labelname];
+//     if( foundLabel == NULL ) {
+//         cerr << "No label Found" << endl;
+//         exit(1);
+//     }
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             int i = obj -> getNumericValue();
+//             if( i != 0 ) {
+//                 counter = foundLabel -> linenumber;
+//             }
+//         }
+//     } else {
+//         cout << str << endl;
+//         int i = stoi(str);
+//         if( i != 0 ) {
+//             counter = foundLabel -> linenumber;
+//         }
+//     } 
+//     delete(A);
+// }
 
-void JMPGTEHelper(stringstream&ss) {
-	string str = "";
-	stringstream iss(ss.str());
-	getline(ss, str, ' ');
-	jumpgte* A = new jumpgte();
-	A->initialize(iss, counter);
-	delete(A);
-}
+// void JMPGTHelper(stringstream&ss) {
+//     int first;
+//     int second;
+//     string str = "";
+//     stringstream iss(ss.str());
+//     getline(ss, str, ' ');
+//     jumpgt* A = new jumpgt();
+//     A->initialize(iss, counter);
+//     getline(iss, str, ',');
+//     label * foundLabel = createdLabels[A-> labelname];
+//     if( foundLabel == NULL ) {
+//         cerr << "No label Found" << endl;
+//         exit(1);
+//     }
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             first = obj -> getNumericValue();
+//         }
+//     } else {
+//         first = stoi(str);
+//     }
 
-void JMPLTHelper(stringstream&ss) {
-	string str = "";
-	stringstream iss(ss.str());
-	getline(ss, str, ' ');
-	jumplt* A = new jumplt();
-	A->initialize(iss, counter);
-	delete(A);
-}
+//     getline(iss >> ws, str, ',');
 
-void JMPLTEHelper(stringstream&ss) {
-	string str = "";
-	stringstream iss(ss.str());
-	getline(ss, str, ' ');
-	jumplte* A = new jumplte();
-	A->initialize(iss, counter);
-	delete(A);
-}
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             second = obj -> getNumericValue();
+//         }
+//     } else {
+//         second = stoi(str);
+//     }
+//     if ( first > second ) {
+//         counter = foundLabel -> linenumber;
+//     }
+
+//     delete(A);
+// }
+
+// void JMPGTEHelper(stringstream&ss) {
+//     int first;
+//     int second;
+//     string str = "";
+//     stringstream iss(ss.str());
+//     getline(ss, str, ' ');
+//     jumpgt* A = new jumpgt();
+//     A->initialize(iss, counter);
+//     getline(iss, str, ',');
+//     label * foundLabel = createdLabels[A-> labelname];
+//     if( foundLabel == NULL ) {
+//         cerr << "No label Found" << endl;
+//         exit(1);
+//     }
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             first = obj -> getNumericValue();
+//         }
+//     } else {
+//         first = stoi(str);
+//     }
+
+//     getline(iss >> ws, str, ',');
+
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             second = obj -> getNumericValue();
+//         }
+//     } else {
+//         second = stoi(str);
+//     }
+//     if ( first >= second ) {
+//         counter = foundLabel -> linenumber;
+//     }
+
+//     delete(A);
+// }
+
+// void JMPLTHelper(stringstream&ss) {
+//     int first;
+//     int second;
+//     string str = "";
+//     stringstream iss(ss.str());
+//     getline(ss, str, ' ');
+//     jumpgt* A = new jumpgt();
+//     A->initialize(iss, counter);
+//     getline(iss, str, ',');
+//     label * foundLabel = createdLabels[A-> labelname];
+//     if( foundLabel == NULL ) {
+//         cerr << "No label Found" << endl;
+//         exit(1);
+//     }
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             first = obj -> getNumericValue();
+//         }
+//     } else {
+//         first = stoi(str);
+//     }
+
+//     getline(iss >> ws, str, ',');
+
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             second = obj -> getNumericValue();
+//         }
+//     } else {
+//         second = stoi(str);
+//     }
+//     if ( first < second ) {
+//         counter = foundLabel -> linenumber;
+//     }
+
+//     delete(A);
+// }
+
+// void JMPLTEHelper(stringstream&ss) {
+//     int first;
+//     int second;
+//     string str = "";
+//     stringstream iss(ss.str());
+//     getline(ss, str, ' ');
+//     jumpgt* A = new jumpgt();
+//     // A -> canJump();
+//     A->initialize(iss, counter);
+//     getline(iss, str, ',');
+//     label * foundLabel = createdLabels[A-> labelname];
+//     if( foundLabel == NULL ) {
+//         cerr << "No label Found" << endl;
+//         exit(1);
+//     }
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             first = obj -> getNumericValue();
+//         }
+//     } else {
+//         first = stoi(str);
+//     }
+
+//     getline(iss >> ws, str, ',');
+
+//     if (str[0] == '$') {
+//         cout << str << endl;
+//         VAR * obj = createdVariables[str];
+//         if (obj == NULL) {
+//             cerr << "Variable does not exist" << endl;
+//             exit(1);
+//         } else {
+//             second = obj -> getNumericValue();
+//         }
+//     } else {
+//         second = stoi(str);
+//     }
+//     if ( first <= second ) {
+//         counter = foundLabel -> linenumber;
+//     }
+
+//     delete(A);
+// }
 
 void sleepHelper(stringstream &ss) {
 	string str = "";
@@ -262,6 +559,37 @@ void sleepHelper(stringstream &ss) {
     	    cout << "Done!" << endl;
         }
 	}
+}
+
+void threadParseHelper( stringstream &ss ){
+    cout << "We're parsing for a thread end" << endl;
+    bool foundEnd = false;
+    int subCount = counter;
+    string fileLine = lines[subCount];
+    string name = "";
+    stringstream iss(fileLine);// Load line to the string stream
+    for(subCount; subCount <= lines.size()-1; subCount++ ){
+        getline(iss, name);
+        if( name == "THREAD_END") {
+            cout << "we found one" << endl;
+            bool foundEnd = true;
+            break;
+        }
+    }
+    if ( !foundEnd ) {
+        cerr << "No thread end to match" << endl;
+        exit(1);
+    }
+}
+
+void threadExecuteHelper( stringstream &ss ){
+    cout << "We are now executing a thread" << endl;
+}
+
+void barrierHelper( stringstream &ss ) {
+    for (std::thread &t : threadVector ) {
+        t.join();
+    }
 }
 
 void doNothing( stringstream &ss ){}

@@ -13,8 +13,7 @@ NUMERIC::NUMERIC(const string& inName, const int& val) {
 }
 
 void NUMERIC::setValue(int i) {
-    cout << "WE're gonna set this value" << endl;
-    
+    value = i;
 }
 
 int NUMERIC::getValue() {

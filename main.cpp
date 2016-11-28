@@ -13,7 +13,7 @@ int main() {
     functionPointers["SUB"] = &subHelper;
     functionPointers["MUL"] = &multHelper;
     functionPointers["DIV"] = &divHelper;
-    // functionPointers["ASSIGN"] = &assignHelper;
+    functionPointers["ASSIGN"] = &assignHelper;
     functionPointers["OUT"] = &outHelper;
     functionPointers["SET_STR_CHAR"] = &setStrHelper;
     functionPointers["GET_STR_CHAR"] = &getStrHelper;
@@ -26,6 +26,7 @@ int main() {
     // functionPointers["JMPLT"] &JMPLTHelper
     // functionPointers["JMPLTE"] &JMPLTEHelper
     functionPointers["SLEEP"] = &sleepHelper;
+    functionPointers["THREAD_BEGIN"] = &threadParseHelper;
 
     string line ="";
     ifstream readFile("Program.mis");
@@ -52,11 +53,14 @@ int main() {
         getline(iss, name, ' ');
         if ( name == "LABEL" ) {
             (*(functionPointers["LABEL"]))(iss);
+        } else if (name == "THREAD_BEGIN") {
+            (*(functionPointers["THREAD_BEGIN"]))(iss);
         }
         counter++;
     }
     counter = 0;
     functionPointers["LABEL"] = &doNothing;
+    functionPointers["THREAD_BEGIN"] = &threadExecuteHelper;
 
     // Loop throught the line map and parse our OP code
     // Then we send it off to a helper function

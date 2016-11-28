@@ -11,7 +11,6 @@ public:
 	virtual void initialize(stringstream &ss, int x);
 	string labelname;
 	int linenumber;
-	void acjump(string str);
 };
 
 #endif;

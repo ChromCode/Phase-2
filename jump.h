@@ -11,7 +11,6 @@ public:
 	virtual ~jump();
 	void initialize(stringstream &ss, int x);
 	void clone(stringstream&ss, int x);
-	void acjump(string str);
 };
 
 #endif
