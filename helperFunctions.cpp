@@ -582,14 +582,62 @@ void threadParseHelper( stringstream &ss ){
     }
 }
 
-void aquireLock(var){
-	while(var.isLocked()){
+void aquireLock(stringstream &ss){
+	string str = "";
+    	getline(ss>>ws, str, ',');
+    	if( str[0] != '$' ) {
+        	cerr << "Must be a valid variable" << endl;
+		break;
+    	}
+
+	if( createdNUMERICS.find(str) != createdNUMERICS.end() ) {
+            NUMERIC * var = createdNUMERICS[str];
+
+        // repeat the process for all other cases
+        } else if( createdREALS.find(str) != createdREALS.end() ) {
+            REAL * var = createdREALS[str];
+
+        } else if( createdCHARS.find(str) != createdCHARS.end() ) {
+            CHAR * var = createdCHARS[str];
+
+        } else if( createdSTRINGS.find(str) != createdSTRINGS.end() ) {
+            STRING * var = createdSTRINGS[str];
+            
+        } else {
+            cerr << "Variable does not exist" << endl;
+            break;
+        }
+	while(var->isLocked()){
 		//wait
 	}
-	var.setLock();
+	var->setLock();
 }
-void releaseLock(var){
-	var.unLock();
+void releaseLock(stringstream &ss){
+	string str = "";
+    	getline(ss>>ws, str, ',');
+    	if( str[0] != '$' ) {
+        	cerr << "Must be a valid variable" << endl;
+		break;
+    	}
+
+	if( createdNUMERICS.find(str) != createdNUMERICS.end() ) {
+            NUMERIC * var = createdNUMERICS[str];
+
+        // repeat the process for all other cases
+        } else if( createdREALS.find(str) != createdREALS.end() ) {
+            REAL * var = createdREALS[str];
+
+        } else if( createdCHARS.find(str) != createdCHARS.end() ) {
+            CHAR * var = createdCHARS[str];
+
+        } else if( createdSTRINGS.find(str) != createdSTRINGS.end() ) {
+            STRING * var = createdSTRINGS[str];
+            
+        } else {
+            cerr << "Variable does not exist" << endl;
+            break;
+        }
+	var->unLock();
 }
 
 void threadExecuteHelper( start, end){
