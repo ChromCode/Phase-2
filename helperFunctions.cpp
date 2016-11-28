@@ -640,8 +640,9 @@ void releaseLock(stringstream &ss){
 	var->unLock();
 }
 
-void threadExecuteHelper( start, end){
+void threadExecuteHelper( start){
     cout << "We are now executing a thread" << endl;
+    int thread_end = threadPairs[start];
     int intern_counter = start;
     while(intern_counter<end_line){
     	string fileLine = lines[counter];
