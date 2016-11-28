@@ -36,7 +36,7 @@ void sleepHelper( stringstream &ss );
 void aquireLock(stringstream &ss);
 void releaseLock(stringstream &ss);
 void threadParseHelper( stringstream &ss );
-void threadExecuteHelper(int start, int end);
+void threadExecuteHelper(int start);
 void barrierHelper( stringstream &ss );
 void doNothing( stringstream &ss );
 void deleteVariables();
