@@ -582,8 +582,22 @@ void threadParseHelper( stringstream &ss ){
     }
 }
 
-void threadExecuteHelper( stringstream &ss ){
+void threadExecuteHelper( start, end){
     cout << "We are now executing a thread" << endl;
+    int intern_counter = start;
+    while(intern_counter<end_line){
+    	string fileLine = lines[counter];
+        stringstream iss(fileLine);// Load line to the string stream
+        getline(iss, name, ' ');
+        if( functionPointers.find(name) == functionPointers.end() ) {
+            cerr << "Input line is invalid: " << name << endl;
+            cerr << "No valid OPCODE" << endl;
+            exit(1);
+        } else {
+            (*(functionPointers[name]))(iss);
+        }
+
+    }
 }
 
 void barrierHelper( stringstream &ss ) {
